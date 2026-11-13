@@ -38,25 +38,25 @@ export function useForceCloseCodexProcesses({
       const closedCount = Math.max(0, processCount - remainingCount);
 
       if (!latestProcessInfo) {
-        showToast("Could not verify that Codex closed. Account switching and reopening were skipped.", true);
+        showToast("无法确认 Codex 已关闭，已跳过切换账号和重新打开。", true);
       } else if (result.targeted_count === 0) {
-        showToast("No running Codex processes found.");
+        showToast("没有正在运行的 Codex 进程。");
       } else if (remainingCount === 0) {
         showToast(
-          `${forceClose ? "Force closed" : "Closed"} ${processCount} Codex session${
-            processCount === 1 ? "" : "s"
-          }.`
+          `${forceClose ? "已强制关闭" : "已关闭"} ${processCount} 个 Codex 会话${
+            ""
+          }。`
         );
       } else if (closedCount > 0) {
         showToast(
-          `${forceClose ? "Force closed" : "Closed"} ${closedCount}/${processCount} Codex sessions. ${remainingCount} still running.`,
+          `${forceClose ? "已强制关闭" : "已关闭"} ${closedCount}/${processCount} 个 Codex 会话，还有 ${remainingCount} 个在运行。`,
           true
         );
       } else {
         showToast(
-          `Could not ${forceClose ? "force close" : "gracefully close"} ${remainingCount} Codex session${
-            remainingCount === 1 ? "" : "s"
-          }.`,
+          `无法${forceClose ? "强制关闭" : "正常关闭"} ${remainingCount} 个 Codex 会话${
+            ""
+          }。`,
           true
         );
       }
@@ -64,7 +64,7 @@ export function useForceCloseCodexProcesses({
       return { processInfo: latestProcessInfo, reopenToken: result.reopen_token ?? null };
     } catch (err) {
       console.error("Failed to close Codex processes:", err);
-      showToast(`Close failed: ${formatError(err)}`, true);
+      showToast(`关闭失败：${formatError(err)}`, true);
       return null;
     } finally {
       setConfirmOpen(false);

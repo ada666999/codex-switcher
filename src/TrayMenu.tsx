@@ -20,13 +20,13 @@ const SWITCH_ACCOUNT_BLOCKED_EVENT = "switch-account-blocked";
 const CODEX_RUNNING_PREFIX = "Cannot switch accounts while";
 
 function formatError(err: unknown): string {
-  if (!err) return "Unknown error";
+  if (!err) return "未知错误";
   if (err instanceof Error && err.message) return err.message;
   if (typeof err === "string") return err;
   try {
     return JSON.stringify(err);
   } catch {
-    return "Unknown error";
+    return "未知错误";
   }
 }
 
@@ -84,10 +84,10 @@ function formatExactResetTime(
   }
 
   const minutes = String(date.getMinutes()).padStart(2, "0");
-  const period = date.getHours() >= 12 ? "PM" : "AM";
+  const period = date.getHours() >= 12 ? "下午" : "上午";
   const hour12 = date.getHours() % 12 || 12;
 
-  return `${hour12}:${minutes} ${period}`;
+  return `${period}${hour12}:${minutes}`;
 }
 
 function formatTokens(tokens: number | null | undefined): string {
@@ -182,7 +182,7 @@ function TrayMenu() {
         [active.id]: {
           account_id: active.id,
           available: false,
-          source: "Codex usage stats via ChatGPT backend",
+          source: "Codex 用量统计（来自 ChatGPT 后台）",
           generated_at: null,
           stats_as_of: null,
           summary: {
@@ -365,8 +365,8 @@ function TrayMenu() {
           disabled={accounts.length === 0}
           title={
             autoWarmupAllEnabled
-              ? "Disable auto warm-up for all accounts"
-              : "Enable auto warm-up for all accounts"
+              ? "关闭全部账号的自动预热"
+              : "开启全部账号的自动预热"
           }
           className={`ml-auto rounded-md px-2 py-1 text-[11px] font-semibold transition-colors disabled:opacity-50 ${
             autoWarmupAllEnabled
@@ -374,12 +374,12 @@ function TrayMenu() {
               : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
           }`}
         >
-          Auto: {autoWarmupAllEnabled ? "on" : "off"}
+          自动：{autoWarmupAllEnabled ? "开" : "关"}
         </button>
         <button
           onClick={() => void handleRefresh()}
           disabled={refreshing}
-          title="Refresh usage"
+          title="刷新用量"
           className="flex h-6 w-6 items-center justify-center rounded-md text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 disabled:opacity-50 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
         >
           <span className={`text-base leading-none ${refreshing ? "inline-block animate-spin" : ""}`}>
@@ -391,11 +391,11 @@ function TrayMenu() {
       <div className="flex-1 overflow-y-auto p-1.5">
         {loading ? (
           <div className="px-2 py-6 text-center text-xs text-gray-500 dark:text-gray-400">
-            Loading...
+            加载中…
           </div>
         ) : accounts.length === 0 ? (
           <div className="px-2 py-6 text-center text-xs text-gray-500 dark:text-gray-400">
-            No accounts configured
+            还没有配置账号
           </div>
         ) : (
           accounts.map((account) => {
@@ -470,7 +470,7 @@ function TrayMenu() {
                           <span key={w.label} className="block">
                             <span className="flex items-center gap-1">
                               <span className="text-[11px] font-medium text-gray-700 dark:text-gray-200">
-                                {w.label}
+                                {w.label === "Weekly" ? "每周" : "5 小时"}
                               </span>
                               <span
                                 className={`h-1.5 w-1.5 rounded-full ${tone.dot}`}
@@ -484,11 +484,11 @@ function TrayMenu() {
                             </span>
                             <span className="mt-0.5 flex justify-between text-[11px] text-gray-500 dark:text-gray-400">
                               <span className={tone.text}>
-                                {remaining.toFixed(0)}% left
+                                {remaining.toFixed(0)}% 剩余
                               </span>
                               {reset && (
                                 <span className="shrink-0 whitespace-nowrap">
-                                  {reset === "now" ? "Resets now" : `Resets in ${reset}`}
+                                  {reset === "now" ? "即将重置" : `${reset}后重置`}
                                   {exactReset && ` • ${exactReset}`}
                                 </span>
                               )}
@@ -499,7 +499,7 @@ function TrayMenu() {
                     </span>
                   ) : usage?.error ? (
                     <span className="block truncate text-xs text-red-500 dark:text-red-400">
-                      Usage unavailable
+                      用量不可用
                     </span>
                   ) : account.email ? (
                     <span className="block truncate text-xs text-gray-500 dark:text-gray-400">
@@ -512,13 +512,13 @@ function TrayMenu() {
                         <span className="block font-medium text-gray-900 dark:text-gray-100">
                           {formatTokens(sumDailyTokens(stats, 1))}
                         </span>
-                        <span>today</span>
+                        <span>今天</span>
                       </span>
                       <span className="rounded-md bg-white px-2 py-1 text-[11px] text-gray-600 shadow-sm dark:bg-gray-950 dark:text-gray-300">
                         <span className="block font-medium text-gray-900 dark:text-gray-100">
                           {formatTokens(sumDailyTokens(stats, 7))}
                         </span>
-                        <span>last 7 days</span>
+                        <span>近 7 天</span>
                       </span>
                     </span>
                   )}
@@ -541,7 +541,7 @@ function TrayMenu() {
       {dockDisplayMode && (
         <div className="flex items-center gap-1 border-t border-gray-100 px-1.5 py-1.5 dark:border-gray-800">
           <span className="px-1.5 text-[11px] font-medium text-gray-500 dark:text-gray-400">
-            Dock
+            程序坞
           </span>
           <button
             onClick={() => void handleDockDisplayMode("show_in_dock")}
@@ -551,7 +551,7 @@ function TrayMenu() {
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
             }`}
           >
-            Show
+            显示
           </button>
           <button
             onClick={() => void handleDockDisplayMode("menu_bar_only")}
@@ -561,7 +561,7 @@ function TrayMenu() {
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
             }`}
           >
-            Menu Bar
+            菜单栏
           </button>
         </div>
       )}
@@ -571,13 +571,13 @@ function TrayMenu() {
           onClick={() => void invokeBackend("open_main_window")}
           className="flex-1 rounded-lg px-2 py-1.5 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
         >
-          Open Codex Switcher
+          打开 Codex Switcher
         </button>
         <button
           onClick={() => void invokeBackend("quit_app")}
           className="rounded-lg px-2 py-1.5 text-sm text-gray-500 transition-colors hover:bg-gray-100 hover:text-red-600 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-red-400"
         >
-          Quit
+          退出
         </button>
       </div>
     </div>

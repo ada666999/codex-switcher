@@ -319,7 +319,7 @@ fn build_menu<R: Runtime>(app: &AppHandle<R>, store: &AccountsStore) -> tauri::R
 
     if store.accounts.is_empty() {
         menu.append(
-            &MenuItemBuilder::with_id("empty", "No accounts configured")
+            &MenuItemBuilder::with_id("empty", "还没有配置账号")
                 .enabled(false)
                 .build(app)?,
         )?;
@@ -339,8 +339,8 @@ fn build_menu<R: Runtime>(app: &AppHandle<R>, store: &AccountsStore) -> tauri::R
     append_dock_settings_menu(app, &menu)?;
     #[cfg(target_os = "macos")]
     menu.append(&PredefinedMenuItem::separator(app)?)?;
-    menu.append(&MenuItemBuilder::with_id(OPEN_ITEM_ID, "Open Codex Switcher").build(app)?)?;
-    menu.append(&MenuItemBuilder::with_id(QUIT_ITEM_ID, "Quit").build(app)?)?;
+    menu.append(&MenuItemBuilder::with_id(OPEN_ITEM_ID, "打开 Codex Switcher").build(app)?)?;
+    menu.append(&MenuItemBuilder::with_id(QUIT_ITEM_ID, "退出").build(app)?)?;
     Ok(menu)
 }
 
@@ -349,13 +349,13 @@ fn append_dock_settings_menu<R: Runtime>(app: &AppHandle<R>, menu: &Menu<R>) -> 
     let settings = load_app_settings().unwrap_or_default();
     let dock_settings = Submenu::with_items(
         app,
-        "Dock Icon",
+        "程序坞图标",
         true,
         &[
-            &CheckMenuItemBuilder::with_id(crate::app_menu::DOCK_SHOW_IN_DOCK_ID, "Show in Dock")
+            &CheckMenuItemBuilder::with_id(crate::app_menu::DOCK_SHOW_IN_DOCK_ID, "显示在程序坞")
                 .checked(settings.dock_display_mode == crate::app_menu::DockDisplayMode::ShowInDock)
                 .build(app)?,
-            &CheckMenuItemBuilder::with_id(crate::app_menu::DOCK_MENU_BAR_ONLY_ID, "Menu Bar Only")
+            &CheckMenuItemBuilder::with_id(crate::app_menu::DOCK_MENU_BAR_ONLY_ID, "仅菜单栏")
                 .checked(
                     settings.dock_display_mode == crate::app_menu::DockDisplayMode::MenuBarOnly,
                 )
