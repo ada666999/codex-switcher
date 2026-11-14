@@ -1,3 +1,22 @@
+> ## 🇨🇳 简体中文汉化版
+>
+> 这是 [Lampese/codex-switcher](https://github.com/Lampese/codex-switcher) 的简体中文汉化版，界面全部翻成中文，功能和原版一致。MIT 协议，原作者版权保留。
+>
+> **一键部署**：把这个仓库链接丢给 Codex，说「帮我部署这个仓库」，它会按 [AGENTS.md](AGENTS.md) 自动装依赖、编译、安装。
+>
+> 手动编译：装好 Node 18+、pnpm、Rust 后
+>
+> ```bash
+> git clone https://github.com/ada666999/codex-switcher.git
+> cd codex-switcher
+> pnpm install
+> pnpm tauri build --bundles app -c '{"bundle":{"createUpdaterArtifacts":false}}'
+> ```
+>
+> ⚠️ 不要点应用内的「更新」，会装回英文原版。
+
+---
+
 # Reminder: perhaps you no longer need this software
 
 <img width="1015" height="244" alt="image" src="https://github.com/user-attachments/assets/3770389e-b2db-4b68-af1e-7bf4a5ff5ced" />
